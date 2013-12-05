@@ -1,0 +1,58 @@
+kitpages_step:
+    shared_step_list:
+        StepSample:
+            class: '\Kitpages\StepBundle\Tests\Sample\StepSample'
+            parameter_list:
+                return: 'changedByStepConfig1'
+            service_list:
+                listener: stepListener
+            help:
+                short: step sample displaying a string
+                complete: |
+                    displays a string
+                    @param string return string returned by the step
+                    @service listener service used for xxx
+                    @event:returnValue string
+                    @return boolean true if ok or false
+        StepSampleOriginal:
+            class: '\Kitpages\StepBundle\Tests\Sample\StepSample'
+            help:
+                short: private step
+                complete: |
+                    displays a string
+                    @param string return string returned by the step
+                    @service listener service used for xxx
+                    @event:returnValue string
+                    @return boolean true if ok or false
+                private: true
+
+        CustomPreventDefault:
+            class: '\Kitpages\StepBundle\Tests\Sample\StepSample'
+            parameter_list:
+                throw_exception: true
+
+        parentStep:
+            class: '\Kitpages\StepBundle\Tests\Sample\StepSample'
+            parameter_list:
+                return: 'changedByStepConfig1'
+        childStep:
+            parent_shared_step: parentStep
+            help:
+                short: childStep sample
+                complete: |
+                    displays a string
+                    @param string return string returned by the step
+                    @service listener service used for xxx
+                    @event:returnValue string
+                    @return boolean true if ok or false
+
+services:
+    stepListener:
+        class: Kitpages\StepBundle\Tests\Sample\StepListener
+        tags:
+            - { name: kernel.event_listener, event: kitpages_step.on_step_execute, method: onStepExecute }
+            - { name: kernel.event_listener, event: kitpages_step.after_step_execute, method: afterStepExecute }
+
+framework:
+    secret: "test"
+    test: ~
