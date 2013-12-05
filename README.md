@@ -6,12 +6,7 @@ KitpagesStepBundle
 This bundle provides a step system for a future workflow system
 
 ## Versions
-05/12/2013 : major refactor and separation between chain and steps
-04/23/2013 : v1.4.0 help system steps
-04/18/2013 : v1.3.0 step inheritance with the optional
-02/19/2013 : v1.2.0 step parameter template rendering
-02/18/2013 : v1.1.0 steps are not container aware anymore. Services are injected in config.yml
-02/18/2013 : v1.0.0 first stable version
+05/12/2013 : v1.0.0 : major refactor and separation between chain and steps
 
 ## Actual state
 
@@ -173,3 +168,9 @@ $codeCopyStepKitpages->setParameter('src_dir', '/home/webadmin/htdocs/dev/cms2.k
 $codeCopyStepKitpages->execute($event);
 ```
 
+## old versions before fork
+04/23/2013 : v1.4.0 help system steps
+04/18/2013 : v1.3.0 step inheritance with the optional
+02/19/2013 : v1.2.0 step parameter template rendering
+02/18/2013 : v1.1.0 steps are not container aware anymore. Services are injected in config.yml
+02/18/2013 : v1.0.0 first stable version
