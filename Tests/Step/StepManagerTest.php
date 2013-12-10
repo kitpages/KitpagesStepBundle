@@ -13,6 +13,10 @@ class StepManagerTest extends WebTestCase
     public function setUp()
     {
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\Container');
+        $this->container
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnArgument(0));
         $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcher');
     }
     public function testSimpleStep()
@@ -176,18 +180,25 @@ class StepManagerTest extends WebTestCase
 
     public function testExtendedInheritanceStep()
     {
+
         $stepListConfig = array(
             'stepTest' => array(
                 'class' => '\Kitpages\StepBundle\Tests\Sample\StepSample',
                 'parameter_list' => array(
                     'return' => "changed"
+                ),
+                'service_list' => array(
+                    'logger' => 'loggerresult'
                 )
             ),
             'childStep1' => array(
                 "parent_shared_step" => "stepTest"
             ),
             'childStep2' => array(
-                "parent_shared_step" => "childStep1"
+                "parent_shared_step" => "childStep1",
+                'service_list' => array(
+                    'logger' => 'loggerresult-child2'
+                )
             ),
             'childStep3' => array(
                 "parent_shared_step" => "childStep2",
@@ -199,12 +210,17 @@ class StepManagerTest extends WebTestCase
 
         $stepManager = new StepManager($stepListConfig, $this->container, $this->eventDispatcher);
 
+        $stepTest = $stepManager->getStep('stepTest');
+        $this->assertEquals("loggerresult", $stepTest->getService("logger"));
+
         $stepTest = $stepManager->getStep('childStep1');
         $resultExecute = $stepTest->execute();
+        $this->assertEquals("loggerresult", $stepTest->getService("logger"));
         $this->assertEquals($resultExecute, "changed");
 
         $stepTest = $stepManager->getStep('childStep2');
         $resultExecute = $stepTest->execute();
+        $this->assertEquals("loggerresult-child2", $stepTest->getService("logger"));
         $this->assertEquals($resultExecute, "changed");
 
         $stepTest = $stepManager->getStep('childStep3');
