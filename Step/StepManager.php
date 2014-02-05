@@ -7,23 +7,30 @@ use Kitpages\StepBundle\Proxy\ProxyGenerator;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class StepManager
 {
-
+    /** @var array of Step */
     protected $stepList = null;
+    /** @var ContainerInterface  */
     protected $container = null;
+    /** @var EventDispatcherInterface  */
     protected $eventDispatcher = null;
+    /** @var Stopwatch */
+    protected $stopwatch = null;
 
     public function __construct(
         $stepList,
         ContainerInterface $container,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        Stopwatch $stopwatch = null
     )
     {
         $this->stepList = $stepList;
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
+        $this->stopwatch = $stopwatch;
     }
 
     public function getStep($stepName, $stepConfig = array())
@@ -49,6 +56,7 @@ class StepManager
         $proxyGenerator = new ProxyGenerator();
         $step = $proxyGenerator->generateProcessProxy($className);
         $step->__stepProxySetEventDispatcher($this->eventDispatcher);
+        $step->__stepProxySetStopwatch($this->stopwatch);
 
         if (! $step instanceof StepInterface) {
             throw new StepException("Step class ".$className." doesn't implements StepInterface");

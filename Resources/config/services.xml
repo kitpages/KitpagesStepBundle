@@ -13,6 +13,7 @@
             <argument>%kitpages_step.shared_step_list%</argument>
             <argument type="service" id="service_container" />
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="debug.stopwatch" on-invalid="null" />
         </service>
     </services>
 
