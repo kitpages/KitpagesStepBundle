@@ -34,9 +34,9 @@ class <<shortClassName>>
         $event->setReturnValue(null);
         $this->__stepProxyEventDispatcher->dispatch(KitpagesStepEvents::ON_STEP_EXECUTE, $event);
         if (!$event->isDefaultPrevented()) {
-            if ($this->__stepProxyStopwatch) { $this->__stepProxyStopwatch->start('KitpagesStep: <<originalClassName>>'); }
+            if ($this->__stepProxyStopwatch) { $this->__stepProxyStopwatch->start('KitpagesStep: '.$this->getParameter('__stopwatch_step_name')); }
             $event->setReturnValue(parent::execute($event));
-            if ($this->__stepProxyStopwatch) { $this->__stepProxyStopwatch->stop('KitpagesStep: <<originalClassName>>'); }
+            if ($this->__stepProxyStopwatch) { $this->__stepProxyStopwatch->stop('KitpagesStep: '.$this->getParameter('__stopwatch_step_name')); }
         }
         $this->__stepProxyEventDispatcher->dispatch(KitpagesStepEvents::AFTER_STEP_EXECUTE, $event);
         return $event->getReturnValue();

@@ -56,7 +56,6 @@ class StepManager
         $proxyGenerator = new ProxyGenerator();
         $step = $proxyGenerator->generateProcessProxy($className);
         $step->__stepProxySetEventDispatcher($this->eventDispatcher);
-        $step->__stepProxySetStopwatch($this->stopwatch);
 
         if (! $step instanceof StepInterface) {
             throw new StepException("Step class ".$className." doesn't implements StepInterface");
@@ -76,6 +75,13 @@ class StepManager
                 $step->setParameter($key, $val);
             }
         }
+
+        // stopwatch management
+        if ($this->stopwatch) {
+            $step->__stepProxySetStopwatch($this->stopwatch);
+            $step->setParameter('__stopwatch_step_name', $stepName);
+        }
+
 
         return $step;
     }
