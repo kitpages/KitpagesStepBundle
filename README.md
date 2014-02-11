@@ -6,7 +6,16 @@ KitpagesStepBundle
 This bundle provides a step system for a future workflow system
 
 ## Versions
-05/12/2013 : v1.0.0 : major refactor and separation between chain and steps
+
+11/02/2014 : v1.1.0
+
+* no BC Break
+* new : stopwatch to see step usages in the timeline of the SF2 debug toolbar
+* enh : more unit tests
+
+05/12/2013 : v1.0.0
+
+* major refactor and separation between chain and steps
 
 ## Actual state
 
@@ -38,7 +47,6 @@ $bundles = array(
     new Kitpages\StepBundle\KitpagesStepBundle(),
 );
 ```
-
 
 ## create a step
 
@@ -99,6 +107,7 @@ kitpages_step:
 ```
 
 ## using app/console
+
 ### run a step with app/console
 
 ``` bash
@@ -169,6 +178,7 @@ $codeCopyStepKitpages->execute($event);
 ```
 
 ## old versions before fork
+
 04/23/2013 : v1.4.0 help system steps
 04/18/2013 : v1.3.0 step inheritance with the optional
 02/19/2013 : v1.2.0 step parameter template rendering
