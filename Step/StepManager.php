@@ -19,6 +19,18 @@ class StepManager
     protected $eventDispatcher = null;
     /** @var Stopwatch */
     protected $stopwatch = null;
+    /**
+     * Debug mode
+     *
+     * @var bool
+     */
+    protected $debug;
+    /**
+     * The cache directory in which the Step Proxy classes will be stored.
+     *
+     * @var string
+     */
+    protected $cacheDir;
 
     public function __construct(
         $stepList,
@@ -31,6 +43,8 @@ class StepManager
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
         $this->stopwatch = $stopwatch;
+        $this->debug = $container->getParameter('kernel.debug');
+        $this->cacheDir = $container->getParameter('kernel.cache_dir');
     }
 
     public function getStep($stepName, $stepConfig = array())
@@ -53,8 +67,8 @@ class StepManager
         }
 
         // generate step
-        $proxyGenerator = new ProxyGenerator();
-        $step = $proxyGenerator->generateProcessProxy($className);
+        $proxyGenerator = new ProxyGenerator($className, $this->debug, $this->cacheDir);
+        $step = $proxyGenerator->generateProcessProxy();
         $step->__stepProxySetEventDispatcher($this->eventDispatcher);
 
         if (! $step instanceof StepInterface) {
@@ -109,7 +123,7 @@ class StepManager
 
         return $this->normalizeStepConfig($stepFinalConfig);
     }
-    
+
     public function normalizeStepConfig($stepConfig)
     {
         // defines default values for help
@@ -145,6 +159,16 @@ class StepManager
             }
         }
         return $stepConfigStack;
+    }
+
+    /**
+     * Getter de stepList
+     *
+     * @return StepInterface[]
+     */
+    public function getStepList()
+    {
+        return $this->stepList;
     }
 
     protected function customMerge($tab1, $tab2)

@@ -12,46 +12,34 @@ class ProxyGeneratorTest extends \PHPUnit_Framework_TestCase
     }
     public function testProxyInfo()
     {
-        $proxyGenerator = new ProxyGenerator();
         $originalClassName = '\Kitpages\StepBundle\Tests\Sample\StepSample';
+        $proxyGenerator = new ProxyGenerator($originalClassName, true, __DIR__.'../app/cache/test');
 
         $this->assertEquals(
-            $proxyGenerator->getProxyNameSpace($originalClassName),
-            'Kitpages\StepBundle\Proxy\Kitpages\StepBundle\Tests\Sample'
-        );
-        $this->assertEquals(
-            $proxyGenerator->getProxyClassName($originalClassName),
+            $proxyGenerator->getProxyClass(),
             '\Kitpages\StepBundle\Proxy\Kitpages\StepBundle\Tests\Sample\StepSample'
         );
     }
 
     public function testProxyClassGeneration()
     {
-        $proxyGenerator = new ProxyGenerator();
         $originalClassName = '\Kitpages\StepBundle\Tests\Sample\StepSample';
+        $proxyGenerator = new ProxyGenerator($originalClassName, true, __DIR__.'../app/cache/test');
+        $proxyClass = $proxyGenerator->getProxyClass();
 
-        // this test is used to check if proxy class generated in the previous test
-        // is generated again or not.
-        $className = $proxyGenerator->generateProxyClass(
-            $originalClassName,
-            'class <<proxyClassName>> {}',
-            array("proxyClassName"=>'\Kitpages\StepBundle\Proxy\Kitpages\StepBundle\Tests\Sample\StepSample')
-        );
+        $proxyGenerator->loadProxyClass();
 
-        $this->assertEquals(
-            $className,
-            '\Kitpages\StepBundle\Proxy\Kitpages\StepBundle\Tests\Sample\StepSample'
+        $this->assertTrue(
+            class_exists($proxyClass)
         );
     }
 
     public function testProxyGeneration()
     {
-        $proxyGenerator = new ProxyGenerator();
         $originalClassName = '\Kitpages\StepBundle\Tests\Sample\StepSample';
+        $proxyGenerator = new ProxyGenerator($originalClassName, true, __DIR__.'../app/cache/test');
 
-        $proxyClassName = $proxyGenerator->generateProcessProxyClass($originalClassName);
-
-        $proxy = new $proxyClassName();
+        $proxy = $proxyGenerator->generateProcessProxy();
 
         $this->assertTrue($proxy instanceof StepSample);
         $this->assertTrue($proxy instanceof ProxyInterface);
@@ -59,17 +47,15 @@ class ProxyGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testProxyGenerationTwice()
     {
-        $proxyGenerator = new ProxyGenerator();
         $originalClassName = '\Kitpages\StepBundle\Tests\Sample\StepSample';
+        $proxyGenerator = new ProxyGenerator($originalClassName, true, __DIR__.'../app/cache/test');
 
-        $proxyClassName = $proxyGenerator->generateProcessProxyClass($originalClassName);
-        $proxy = new $proxyClassName();
+        $proxy = $proxyGenerator->generateProcessProxy();
 
         $this->assertTrue($proxy instanceof StepSample);
         $this->assertTrue($proxy instanceof ProxyInterface);
 
-        $proxyClassName = $proxyGenerator->generateProcessProxyClass($originalClassName);
-        $proxy = new $proxyClassName();
+        $proxy = $proxyGenerator->generateProcessProxy();
         $this->assertTrue($proxy instanceof ProxyInterface);
     }
 

@@ -14,6 +14,17 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null" />
+            <argument>%kernel.debug%</argument>
+            <argument>%kernel.cache_dir%</argument>
+        </service>
+        <service id="kitpages_step.proxy_cache_clearer"
+                 class="Kitpages\StepBundle\Proxy\CacheClearer\ProxyCacheClearer">
+            <tag name="kernel.cache_clearer" />
+        </service>
+        <service id="kitpages_step.proxy_cache_warmer"
+                 class="Kitpages\StepBundle\Proxy\CacheWarmer\ProxyCacheWarmer">
+            <argument type="service" id="kitpages_step.step"/>
+            <tag name="kernel.cache_warmer" />
         </service>
     </services>
 
