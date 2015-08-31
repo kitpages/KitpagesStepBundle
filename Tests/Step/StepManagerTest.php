@@ -17,8 +17,31 @@ class StepManagerTest extends WebTestCase
             ->expects($this->any())
             ->method('get')
             ->will($this->returnArgument(0));
+        $this->container
+            ->expects($this->any())
+            ->method('getParameter')
+            ->with(
+                $this->logicalOr(
+                    $this->equalTo('kernel.debug'),
+                    $this->equalTo('kernel.cache_dir')
+                )
+            )
+            ->will(
+                $this->returnCallback(
+                    function ($param) {
+
+                        if ($param == 'kernel.cache_dir') {
+                            return __DIR__.'../app/cache/test';
+                        }
+
+                        return true;
+                    }
+                )
+            );
+
         $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcher');
     }
+
     public function testSimpleStep()
     {
         $stepListConfig = array(
@@ -79,6 +102,7 @@ class StepManagerTest extends WebTestCase
             $this->assertTrue(true);
         }
     }
+
     public function testExtraStepListConfig()
     {
         $stepListConfig = array();
