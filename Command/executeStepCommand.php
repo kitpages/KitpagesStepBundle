@@ -1,4 +1,5 @@
 <?php
+
 namespace Kitpages\StepBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -27,19 +28,16 @@ EOT
         $stepName = $input->getArgument('stepName');
         $parameterStringList = $input->getOption('p');
         $parameterList = array();
-        foreach($parameterStringList as $parameterString) {
+        foreach ($parameterStringList as $parameterString) {
             $parameterStringArray = explode(':', $parameterString);
             $parameterList[$parameterStringArray[0]] = $parameterStringArray[1];
         }
         $stepConfig = array(
-            'parameter_list' => $parameterList
+            'parameter_list' => $parameterList,
         );
         $stepManager = $this->getContainer()->get('kitpages_step.step');
         $step = $stepManager->getStep($stepName, $stepConfig);
         $ret = $step->execute();
-        $output->writeln("StepName: $stepName; output=".($ret?$ret:"null")."\n");
+        $output->writeln("StepName: $stepName; output=".($ret ? $ret : 'null')."\n");
     }
-
-
-
 }

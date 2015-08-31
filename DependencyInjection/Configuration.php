@@ -35,10 +35,9 @@ class Configuration implements ConfigurationInterface
      * kitpages_cms:
      *     block:
      *         template:
-     *             template_list: {standard: \Kitpages\CmsBundle\Form\TemplateStandardType}
+     *             template_list: {standard: \Kitpages\CmsBundle\Form\TemplateStandardType}.
      *
      * @param ArrayNodeDefinition $node
-     * @return void
      */
     private function addStepListSection(ArrayNodeDefinition $node)
     {

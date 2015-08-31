@@ -53,23 +53,21 @@ class ProxyCacheWarmer implements CacheWarmerInterface
         }
 
         foreach ($stepList as $stepName => $step) {
-
             $stepFinalConfig = $this->stepManager->getResultingConfig($stepName);
             $stepFinalConfig = $this->stepManager->normalizeStepConfig($stepFinalConfig);
 
             // step name is only defined in config given in parameters
             if (!isset($stepFinalConfig['class'])) {
-                throw new StepException("unknown stepName and class undefined in config");
+                throw new StepException('unknown stepName and class undefined in config');
             }
             $className = $stepFinalConfig['class'];
 
             if (!class_exists($className)) {
-                throw new StepException("class ".$className." doesn't exists");
+                throw new StepException('class '.$className." doesn't exists");
             }
 
             $proxyGenerator = new ProxyGenerator($className, true, $cacheDir);
             $proxyGenerator->writeProxyClassCache();
         }
     }
-
 }
